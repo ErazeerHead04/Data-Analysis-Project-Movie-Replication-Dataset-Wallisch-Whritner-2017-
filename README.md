@@ -3,7 +3,7 @@
 
 ---
 
-## 📘 Project Overview
+## Project Overview
 
 This project explores patterns in movie ratings using the **Movie Replication Dataset** (Wallisch & Whritner, 2017).  
 The dataset contains ratings for 400 popular films from several hundred participants, along with demographic and behavioral survey responses.  
@@ -115,7 +115,7 @@ pip install pandas scipy numpy matplotlib
 ---
 
 
-## 📚 Reference
+## Reference
 
 Wallisch, P., & Whritner, J. (2017). *Movie Preferences and Personality: A Large-Scale Replication Study.*  
 New York University, Department of Psychology.
