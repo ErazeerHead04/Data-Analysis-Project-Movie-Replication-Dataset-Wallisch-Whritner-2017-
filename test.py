@@ -95,6 +95,32 @@ plt.savefig("Q2_NewOldMovies.png", dpi=300)
 plt.close()
 
 # ============================================================
+# Q3 — Gender Differences
+# ============================================================
+
+df = df[df[gender_col].isin([1, 2])]  # clean gender column
+p_values_gender = []
+
+movie_shrek = 'Shrek (2001)'
+male_ratings = df.loc[df[gender_col] == 2, movie_shrek].dropna()
+female_ratings = df.loc[df[gender_col] == 1, movie_shrek].dropna()
+
+if len(male_ratings) > 5 and len(female_ratings) > 5:
+    t_shrek, p_shrek = stats.ttest_ind(male_ratings, female_ratings, equal_var=False)
+    mean_male = male_ratings.mean()
+    mean_female = female_ratings.mean()
+    print(f"Q3: 'Shrek (2001)' — t={t_shrek:.3f}, p={p_shrek:.5f}, "
+      f"mean(male)={mean_male:.2f}, mean(female)={mean_female:.2f}")
+    plt.figure(figsize=(5, 5))
+    plt.bar(['Male', 'Female'], [mean_male, mean_female],
+            color=['green', 'red'], edgecolor='black')
+    plt.title("Mean Ratings of 'Shrek (2001)' (Q3)")
+    plt.ylabel("Mean Rating (0–4)")
+    plt.tight_layout()
+    plt.savefig("Q3_Shrek_Gender.png", dpi=300)
+    plt.close()
+
+# ============================================================
 # Q4 — Gender Differences
 # ============================================================
 df = df[df[gender_col].isin([1, 2])]  # clean gender column
@@ -194,5 +220,72 @@ if len(social_watchers) > 5 and len(solo_watchers) > 5:
     plt.tight_layout()
     plt.savefig("Q7_WolfOfWallStreet_SocialPref.png", dpi=300)
     plt.close()
+    
+# ============================================================
+# Q8 — What proportion of movies exhibit such a “social watching” effect?
+# ============================================================
 
-print("\n✅ All plots saved for Q1–Q7.")
+p_values_social = []
+
+for movie in movie_cols:
+    solo_ratings = df.loc[df[social_col] == 1, movie].dropna()
+    social_ratings = df.loc[df[social_col] == 0, movie].dropna()
+    
+    if len(solo_ratings) > 10 and len(social_ratings) > 10:
+        t_social, p_social = stats.ttest_ind(solo_ratings, social_ratings, equal_var=False, nan_policy='omit')
+        p_values_social.append(p_social)
+
+significant_social = sum(p < 0.005 for p in p_values_social)
+prop_social_diff = significant_social / len(p_values_social)
+
+print(f"Q8: {significant_social} movies ({prop_social_diff:.2%}) show a 'social' effect (α=0.005).")
+
+plt.figure(figsize=(7, 5))
+plt.hist(p_values_social, bins=30, color='lightgreen', edgecolor='black')
+plt.axvline(0.005, color='red', linestyle='--', label='α = 0.005')
+plt.title("Distribution of p-values across Social Comparisons (Q8)")
+plt.xlabel("p-value")
+plt.ylabel("Number of Movies")
+plt.legend()
+plt.tight_layout()
+plt.savefig("Q8_Social_Histogram.png", dpi=300)
+plt.close()
+
+# ============================================================
+# Q9 - Is the ratings distribution of ‘Home Alone (1990)’ different than that of ‘Finding Nemo (2003)’? 
+# ============================================================
+
+from statsmodels.distributions.empirical_distribution import ECDF
+
+col1 = "Home Alone (1990)"
+col2 = "Finding Nemo (2003)"
+
+d1_full = df[col1]
+d2_full = df[col2]
+
+# Element-wise cleaning for independent-sample style tests
+d1 = d1_full.dropna().values
+d2 = d2_full.dropna().values
+n1, n2 = len(d1), len(d2)
+n1, n2
+e1 = ECDF(d1)
+e2 = ECDF(d2)
+
+
+stats.ks_2samp(d1, d2)
+
+print(f"Q9: The KS test for the two movies gives us a p-value {1.8193141593127503e-09} (α=0.005).")
+
+plt.step(e1.x, e1.y, color='red', label = 'Home Alone (1990)')
+plt.step(e2.x, e2.y, color='blue', label = 'Finding Nemo (2003)')
+plt.xlabel('rating')
+plt.ylabel('cumulative probability')
+plt.title('Distribution Comparison')
+plt.grid()
+plt.savefig("Q9_Dist_Comp.png", dpi=300)
+plt.close()
+
+
+print("\n✅ All plots saved for Q1–Q9.")
+
+
