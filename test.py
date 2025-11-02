@@ -285,7 +285,45 @@ plt.grid()
 plt.savefig("Q9_Dist_Comp.png", dpi=300)
 plt.close()
 
+# ============================================================
+# QBonus - Does life stress affect how people feel about 'The Silence of the Lambs (1991)'? 
+# ============================================================
 
-print("\n✅ All plots saved for Q1–Q9.")
+luck_col = "My life is very stressful"
+
+p_values_luck = []
+
+# Define movie columns (first 400)
+movie_lamb = 'The Silence of the Lambs (1991)'
+unluckiest_watchers = df.loc[df[luck_col] == 1, movie_lamb].dropna()
+unlucky_watchers = df.loc[df[luck_col] == 2, movie_lamb].dropna()
+moderate_watchers = df.loc[df[luck_col] == 3, movie_lamb].dropna()
+lucky_watchers = df.loc[df[luck_col] == 4, movie_lamb].dropna()
+luckiest_watchers = df.loc[df[luck_col] == 5, movie_lamb].dropna()
+
+if len(unluckiest_watchers) > 5 and len(unlucky_watchers) > 5 and len(moderate_watchers) > 5 and len(lucky_watchers) > 5 and len(luckiest_watchers) > 5:
+    t_luck, p_luck = stats.f_oneway(unluckiest_watchers, unlucky_watchers, moderate_watchers, lucky_watchers, luckiest_watchers)
+    mean_unluckiest = unluckiest_watchers.mean()
+    mean_unlucky = unlucky_watchers.mean()
+    mean_moderate = moderate_watchers.mean()
+    mean_lucky = lucky_watchers.mean()
+    mean_luckiest = luckiest_watchers.mean()
+    print(f"Bonus: 'The Silence of the Lambs (1991)' — t={t_luck:.3f}, p={p_luck:.5f}, "
+          f"mean(most stressed)={mean_unluckiest:.2f}, mean(stressed)={mean_unlucky:.2f}, mean(moderate stress) = {mean_moderate:.2f}, mean(little stress) = {mean_lucky:.2f}, mean(barely stressed) = {mean_luckiest:.2f} ")
+        
+    plt.figure(figsize=(5, 5))
+    plt.bar(['Most Stressed', 'Stressed', 'Moderate', 'Not Stressed', 'Least Stressed'],
+           [mean_unluckiest, mean_unlucky, mean_moderate, mean_lucky, mean_luckiest],
+           color=['mediumseagreen', 'gold', 'blue', 'yellow', 'red'], edgecolor='black')
+    plt.title("Mean Ratings of 'The Silence of the Lambs (1991)' (Bonus)")
+    plt.ylabel("Mean Rating (0–4)")
+    plt.tight_layout()
+    plt.savefig("QBonus_SilenceLambs_Stress.png", dpi=300)
+    plt.close()
+
+print("\n✅ All plots saved for Q1–Q9 and Bonus")
+
+
+
 
 
