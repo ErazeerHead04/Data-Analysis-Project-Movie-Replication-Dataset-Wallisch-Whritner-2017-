@@ -1,9 +1,7 @@
 # ============================================================
 # Data Analysis Project – Movie Replication Dataset (Wallisch & Whritner, 2017)
-# Author: Ahmmed Razee & Team
 # ============================================================
 # This script performs hypothesis testing for multiple research questions (Q1–Q10 + Bonus)
-# using methods from IDS lectures (sampling, hypothesis testing, parametric/nonparametric tests).
 # ============================================================
 
 import pandas as pd
@@ -232,3 +230,4 @@ plt.savefig("QBonus_SilenceLambs_Stress.png", dpi=300)
 plt.close()
 
 print("\n✅ All analyses complete. Plots saved for Q1–Q10 + Bonus.\n")
+
